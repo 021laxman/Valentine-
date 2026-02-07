@@ -124,6 +124,8 @@ button{
   margin-top:10px;
   font-size:12.5px;
   color:#666;
+  white-space: nowrap; /* ✅ keep one line */
+  overflow: hidden;    /* ✅ don't go to next line */
 }
 
 /* Modal */
@@ -189,7 +191,7 @@ button{
         <button class="no" id="noBtn">No</button>
       </div>
 
-      <div class="hint" id="hint">Try tapping “No”… 😄</div>
+      <div class="hint" id="hint">😂</div>
     </div>
   </div>
 </div>
@@ -234,25 +236,38 @@ startBtn.onclick = ()=>{
   screenPlay.classList.add("active");
 };
 
+// ✅ Reset state properly
+let laughCount = 1;
+const MAX_LAUGHS = 10;
+
 function startOver(){
   modal.style.display="none";
   screenPlay.classList.remove("active");
   screenName.classList.add("active");
   nameInput.value="";
+  laughCount = 1;
+  hint.textContent = "😂";
 }
 
 function moveNo(){
   const r = arena.getBoundingClientRect();
   const b = noBtn.getBoundingClientRect();
-  const x = Math.random()*(r.width-b.width);
-  const y = Math.random()*(r.height-b.height);
-  noBtn.style.left=x+"px";
-  noBtn.style.top=y+"px";
-  hint.textContent="😂😂😂";
+
+  const x = Math.random() * (r.width - b.width);
+  const y = Math.random() * (r.height - b.height);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top  = y + "px";
+
+  // ✅ Add one 😂 per attempt, up to one line
+  if(laughCount < MAX_LAUGHS){
+    laughCount++;
+    hint.textContent = "😂".repeat(laughCount);
+  }
 }
 
-noBtn.addEventListener("mouseenter",moveNo);
-noBtn.addEventListener("pointerdown",e=>{e.preventDefault();moveNo()});
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("pointerdown", e => { e.preventDefault(); moveNo(); });
 
 yesBtn.onclick=()=>{
   modal.style.display="grid";
