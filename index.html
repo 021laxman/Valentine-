@@ -1,412 +1,276 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valentine 💖</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💖</title>
 
-  <style>
-    :root{
-      --bg1:#ffe1ef;
-      --bg2:#e4f4ff;
-      --card: rgba(255,255,255,.82);
-      --stroke: rgba(255,255,255,.62);
-      --text:#1f2033;
-      --muted:#6a6f86;
-      --pink:#ff2f7b;
-      --pink2:#ff7ab3;
-      --shadow: 0 22px 80px rgba(20,20,40,.18);
-      --r: 26px;
-    }
+<style>
+:root{
+  --pink:#ff2f7b;
+  --pink2:#ff7ab3;
+  --bg1:#ffe1ef;
+  --bg2:#e4f4ff;
+  --card: rgba(255,255,255,.82);
+  --text:#1f2033;
+  --muted:#6a6f86;
+  --shadow: 0 22px 80px rgba(20,20,40,.18);
+  --r:26px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Roboto,Arial;
+  background:
+    radial-gradient(900px 650px at 15% 20%, var(--bg2), transparent 60%),
+    radial-gradient(900px 650px at 85% 20%, var(--bg1), transparent 60%),
+    linear-gradient(135deg,#fff2f8,#eef9ff);
+  overflow:hidden;
+}
+.wrap{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:22px;
+}
+.card{
+  width:min(760px,92vw);
+  background:var(--card);
+  backdrop-filter:blur(14px);
+  border-radius:var(--r);
+  box-shadow:var(--shadow);
+  padding:30px 22px 22px;
+  position:relative;
+  text-align:center;
+}
+.badge{
+  position:absolute;
+  top:-14px;
+  left:22px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:white;
+  font-size:13px;
+  color:#555;
+}
+h1{
+  margin:12px 0 10px;
+  font-size:clamp(22px,3.8vw,36px);
+}
+.name{
+  background:linear-gradient(90deg,var(--pink),var(--pink2),#5bbcff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  font-weight:900;
+  text-transform:capitalize;
+}
+p{margin:0;color:var(--muted);font-size:14px}
+.screen{display:none}
+.screen.active{display:block}
 
-    *{ box-sizing:border-box; }
-    html, body { height: 100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color:var(--text);
-      overflow:hidden;
-      background:
-        radial-gradient(900px 650px at 15% 20%, var(--bg2), transparent 60%),
-        radial-gradient(900px 650px at 85% 20%, var(--bg1), transparent 60%),
-        linear-gradient(135deg, #fff2f8 0%, #eef9ff 100%);
-    }
+/* Input */
+.inputRow{
+  margin-top:18px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+input{
+  width:min(340px,82vw);
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+button{
+  border:0;
+  border-radius:999px;
+  padding:14px 22px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+.primary{
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  color:white;
+}
 
-    .wrap{ min-height:100vh; display:grid; place-items:center; padding:22px; }
-    .card{
-      width:min(760px, 92vw);
-      background: var(--card);
-      backdrop-filter: blur(14px);
-      border:1px solid var(--stroke);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      padding: 30px 22px 22px;
-      position:relative;
-      text-align:center;
-    }
+/* Game */
+.arena{
+  margin-top:22px;
+  height:110px;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  touch-action:none;
+}
+.yes{
+  background:linear-gradient(135deg,var(--pink),var(--pink2));
+  color:white;
+}
+.no{
+  position:absolute;
+  background:white;
+  border:1px solid #ccc;
+  min-width:86px;
+  left:60%;
+  top:34px;
+}
+.hint{
+  margin-top:10px;
+  font-size:12.5px;
+  color:#666;
+}
 
-    .badge{
-      position:absolute; top:-14px; left: 22px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(255,255,255,.75);
-      box-shadow: 0 12px 30px rgba(0,0,0,.08);
-      font-size: 13px;
-      color: rgba(60,60,90,.78);
-    }
+/* Modal */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  place-items:center;
+  background:rgba(0,0,0,.35);
+}
+.box{
+  background:white;
+  border-radius:28px;
+  padding:28px 22px;
+  text-align:center;
+  width:min(600px,94vw);
+}
+.big{
+  font-size:clamp(22px,3.6vw,34px);
+  font-weight:900;
+}
+.startOver{
+  background:white;
+  border:1px solid #ccc;
+}
 
-    /* ✅ Change name button */
-    .changeName{
-      position:absolute;
-      top: 14px;
-      right: 14px;
-      border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12.5px;
-      font-weight: 850;
-      cursor: pointer;
-      background: rgba(255,255,255,.9);
-      border: 1px solid rgba(120,120,160,.22);
-      color:#2a2c42;
-      box-shadow: 0 12px 28px rgba(0,0,0,.08);
-      display:none; /* shown only on play screen */
-    }
-
-    h1{
-      margin: 12px 0 10px;
-      font-size: clamp(22px, 3.8vw, 36px);
-      letter-spacing:-0.02em;
-      line-height:1.15;
-    }
-
-    .name{
-      background: linear-gradient(90deg, var(--pink), var(--pink2), #5bbcff);
-      -webkit-background-clip:text; background-clip:text;
-      color:transparent;
-      font-weight: 950;
-      text-transform: capitalize;
-    }
-
-    p{ margin:0; color:var(--muted); font-size:14px; }
-
-    .screen { display:none; }
-    .screen.active { display:block; }
-
-    .inputRow{
-      margin-top: 18px;
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-    input[type="text"]{
-      width:min(340px, 82vw);
-      padding: 14px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(120,120,160,.25);
-      outline: none;
-      font-size: 15px;
-      background: rgba(255,255,255,.9);
-      box-shadow: 0 12px 30px rgba(0,0,0,.06);
-    }
-    input[type="text"]:focus{
-      border-color: rgba(255,47,123,.55);
-      box-shadow: 0 18px 48px rgba(255,47,123,.18);
-    }
-
-    button{
-      border:0;
-      border-radius: 999px;
-      padding: 14px 22px;
-      font-size: 15px;
-      font-weight: 850;
-      cursor:pointer;
-      transition: transform .12s ease, box-shadow .12s ease;
-      user-select:none;
-    }
-    button:active{ transform: scale(.98); }
-
-    .primary{
-      color:white;
-      background: linear-gradient(135deg, var(--pink), var(--pink2));
-      box-shadow: 0 16px 48px rgba(255,47,123,.30);
-    }
-
-    .arena{
-      margin-top: 22px;
-      height: 110px;
-      position:relative;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:14px;
-      touch-action:none;
-    }
-    .yes{
-      color:white;
-      background: linear-gradient(135deg, var(--pink), var(--pink2));
-      box-shadow: 0 16px 48px rgba(255,47,123,.30);
-    }
-    .no{
-      position:absolute;
-      background: rgba(255,255,255,.9);
-      color:#2a2c42;
-      border:1px solid rgba(120,120,160,.22);
-      box-shadow: 0 14px 32px rgba(0,0,0,.10);
-      min-width: 86px;
-      left: 60%;
-      top: 34px;
-    }
-    .hint{ margin-top:10px; font-size:12.5px; color: rgba(60,60,90,.68); }
-
-    .modal{
-      position:fixed; inset:0;
-      display:none;
-      place-items:center;
-      background: rgba(10,10,20,.35);
-      backdrop-filter: blur(10px);
-      z-index:50;
-      padding:22px;
-    }
-    .box{
-      width:min(600px, 94vw);
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(255,255,255,.7);
-      border-radius: 28px;
-      box-shadow: 0 22px 90px rgba(0,0,0,.24);
-      padding: 28px 22px;
-      text-align:center;
-    }
-    .big{
-      margin: 10px 0 8px;
-      font-size: clamp(22px, 3.6vw, 34px);
-      font-weight: 950;
-      letter-spacing: -.02em;
-    }
-    .close{
-      margin-left:10px;
-      background: rgba(0,0,0,.08);
-      color:#222;
-      box-shadow:none;
-      font-weight:850;
-    }
-    .startOver{
-      margin-left:10px;
-      background: rgba(255,255,255,.9);
-      color:#2a2c42;
-      border:1px solid rgba(120,120,160,.22);
-      box-shadow: 0 12px 28px rgba(0,0,0,.08);
-      font-weight:850;
-    }
-
-    .rain{ position:fixed; inset:0; pointer-events:none; display:none; z-index:60; }
-    .h{
-      position:absolute;
-      top:-8vh;
-      animation: fall 2.1s ease-in forwards;
-      opacity:.95;
-      filter: drop-shadow(0 12px 10px rgba(0,0,0,.15));
-    }
-    .h::before{ content:"💖"; font-size: 18px; }
-    @keyframes fall{ to{ transform: translateY(115vh) rotate(420deg); opacity:0; } }
-  </style>
+/* Hearts */
+.rain{position:fixed;inset:0;pointer-events:none;display:none}
+.h{
+  position:absolute;
+  top:-8vh;
+  animation:fall 2s ease-in forwards;
+}
+.h::before{content:"💖"}
+@keyframes fall{
+  to{transform:translateY(115vh) rotate(420deg);opacity:0}
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="badge">💝 Happy Valentine’s Week 🗓️</div>
+<div class="wrap">
+  <div class="card">
+    <div class="badge">💝 Happy Valentine’s Week</div>
 
-      <!-- ✅ visible only on play screen -->
-      <button class="changeName" id="changeNameBtn" type="button">Change Name ✍️</button>
+    <!-- Screen 1 -->
+    <div class="screen active" id="screenName">
+      <h1>Enter your name 💗</h1>
+      <div class="inputRow">
+        <input id="nameInput" placeholder="Type your name">
+        <button class="primary" id="startBtn">Continue ➜</button>
+      </div>
+      <div class="hint">Nicknames work too 😌</div>
+    </div>
 
-      <!-- Screen 1 -->
-      <div class="screen active" id="screenName">
-        <h1>Enter your name 💗</h1>
-        <div class="inputRow">
-          <input id="nameInput" type="text" placeholder="Type your name.." maxlength="22" />
-          <button class="primary" id="startBtn" type="button">Continue ➜</button>
-        </div>
-        <div class="hint" style="margin-top:14px;">Tip: You can type nicknames too 😌</div>
+    <!-- Screen 2 -->
+    <div class="screen" id="screenPlay">
+      <h1><span class="name" id="nameSlot"></span> will you be my Valentine?</h1>
+      <p>Try tapping “No”… if you can 😅</p>
+
+      <div class="arena" id="arena">
+        <button class="yes" id="yesBtn">Yes 💖</button>
+        <button class="no" id="noBtn">No</button>
       </div>
 
-      <!-- Screen 2 -->
-      <div class="screen" id="screenPlay">
-        <h1><span class="name" id="nameSlot">Someone</span> will you be my Valentine?</h1>
-        <p id="subline">Try tapping “No”… if you can..😅</p>
-
-        <div class="arena" id="arena">
-          <button class="yes" id="yesBtn" type="button">Yes 💖</button>
-          <button class="no" id="noBtn" type="button">No</button>
-        </div>
-
-        <div class="hint" id="hint">Try tapping “No”… if you can..😄</div>
-      </div>
+      <div class="hint" id="hint">Try tapping “No”… 😄</div>
     </div>
   </div>
+</div>
 
-  <div class="modal" id="modal">
-    <div class="box">
-      <div style="font-size:46px">😍</div>
-      <div class="big">Wow! You got my Heart..💖</div>
-      <p style="margin:0;color:#6a6f86;font-size:14px;">
-        Screenshot this and send it to me..😄
-      </p>
-      <div style="margin-top:16px;">
-        <button class="yes" onclick="copyLink()">Copy Link 🔗</button>
-        <button class="startOver" onclick="resetName()">Start Over ↩️</button>
-        <button class="close" onclick="closeModal()">Close</button>
-      </div>
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="box">
+    <div style="font-size:46px">😍</div>
+    <div class="big">You got my heart 💖</div>
+    <p>Screenshot & send it 😄</p>
+    <div style="margin-top:16px">
+      <button class="yes" onclick="heartRain()">More Love 💕</button>
+      <button class="startOver" onclick="startOver()">Start Over ↩️</button>
     </div>
   </div>
+</div>
 
-  <div class="rain" id="rain"></div>
+<div class="rain" id="rain"></div>
 
-  <script>
-    const screenName = document.getElementById("screenName");
-    const screenPlay = document.getElementById("screenPlay");
-    const nameInput = document.getElementById("nameInput");
-    const startBtn = document.getElementById("startBtn");
-    const nameSlot = document.getElementById("nameSlot");
-    const sublineEl = document.getElementById("subline");
-    const changeNameBtn = document.getElementById("changeNameBtn");
+<script>
+const screenName = document.getElementById("screenName");
+const screenPlay = document.getElementById("screenPlay");
+const nameInput = document.getElementById("nameInput");
+const nameSlot = document.getElementById("nameSlot");
+const startBtn = document.getElementById("startBtn");
+const modal = document.getElementById("modal");
+const arena = document.getElementById("arena");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const hint = document.getElementById("hint");
+const rain = document.getElementById("rain");
 
-    function cleanName(n){
-      n = (n || "").trim();
-      n = n.replace(/[^a-zA-Z0-9 ._'~-]/g, "");
-      if(!n) return "";
-      if(n.length > 22) n = n.slice(0, 22);
-      return n;
-    }
+function cleanName(n){
+  return n.trim().replace(/[^a-zA-Z0-9 ._'~-]/g,"").slice(0,22);
+}
 
-    function showNameScreen(){
-      screenPlay.classList.remove("active");
-      screenName.classList.add("active");
-      changeNameBtn.style.display = "none";
-      nameInput.value = "";
-      nameInput.placeholder = "Type your name..";
-      document.title = "Valentine 💖";
-      setTimeout(()=> nameInput.focus(), 60);
-    }
+startBtn.onclick = ()=>{
+  const n = cleanName(nameInput.value);
+  if(!n) return nameInput.focus();
+  nameSlot.textContent = n;
+  screenName.classList.remove("active");
+  screenPlay.classList.add("active");
+};
 
-    function showPlay(name){
-      nameSlot.textContent = name;
-      document.title = name + " 💖";
-      if (sublineEl) sublineEl.textContent = "Try tapping “No”… if you can..😅";
-      screenName.classList.remove("active");
-      screenPlay.classList.add("active");
-      changeNameBtn.style.display = "inline-block";
-    }
+function startOver(){
+  modal.style.display="none";
+  screenPlay.classList.remove("active");
+  screenName.classList.add("active");
+  nameInput.value="";
+}
 
-    function start(){
-      const n = cleanName(nameInput.value);
-      if(!n){
-        nameInput.focus();
-        nameInput.placeholder = "Please enter your name 🙂";
-        return;
-      }
-      localStorage.setItem("val_name", n);
-      showPlay(n);
-    }
+function moveNo(){
+  const r = arena.getBoundingClientRect();
+  const b = noBtn.getBoundingClientRect();
+  const x = Math.random()*(r.width-b.width);
+  const y = Math.random()*(r.height-b.height);
+  noBtn.style.left=x+"px";
+  noBtn.style.top=y+"px";
+  hint.textContent="😂😂😂";
+}
 
-    function resetName(){
-      localStorage.removeItem("val_name");
-      closeModal();
-      showNameScreen();
-    }
-    window.resetName = resetName;
+noBtn.addEventListener("mouseenter",moveNo);
+noBtn.addEventListener("pointerdown",e=>{e.preventDefault();moveNo()});
 
-    startBtn.addEventListener("click", start);
-    nameInput.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter") start();
-    });
+yesBtn.onclick=()=>{
+  modal.style.display="grid";
+  heartRain();
+};
 
-    changeNameBtn.addEventListener("click", resetName);
-
-    // ✅ Auto-load saved name, BUT still allows change name
-    const saved = cleanName(localStorage.getItem("val_name"));
-    if(saved) showPlay(saved);
-
-    // ---- Game logic ----
-    const arena = document.getElementById('arena');
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const hint = document.getElementById('hint');
-    const modal = document.getElementById('modal');
-    const rain = document.getElementById('rain');
-
-    let tries = 0;
-    function rand(min, max){ return Math.random()*(max-min)+min; }
-
-    function moveNo(){
-      const rect = arena.getBoundingClientRect();
-      const b = noBtn.getBoundingClientRect();
-      const pad = 10;
-
-      const maxX = rect.width - b.width - pad;
-      const maxY = rect.height - b.height - pad;
-
-      const x = rand(pad, Math.max(pad, maxX));
-      const y = rand(pad, Math.max(pad, maxY));
-
-      noBtn.style.left = x + "px";
-      noBtn.style.top  = y + "px";
-
-      tries++;
-      if(tries <= 3) hint.textContent = "Arre yaar… it’s running 😂";
-      if(tries >= 4) hint.textContent = "Be positive.. Say.. Yes! 😂";
-    }
-
-    noBtn.addEventListener("mouseenter", moveNo);
-    noBtn.addEventListener("pointerdown", (e)=>{
-      e.preventDefault();
-      moveNo();
-    });
-
-    arena.addEventListener("pointermove", (e)=>{
-      const nb = noBtn.getBoundingClientRect();
-      const dx = Math.max(nb.left - e.clientX, 0, e.clientX - nb.right);
-      const dy = Math.max(nb.top  - e.clientY, 0, e.clientY - nb.bottom);
-      const dist = Math.hypot(dx, dy);
-      if(dist < 90) moveNo();
-    });
-
-    yesBtn.addEventListener("click", ()=>{
-      modal.style.display = "grid";
-      heartRain();
-    });
-
-    function closeModal(){ modal.style.display = "none"; }
-    window.closeModal = closeModal;
-
-    async function copyLink(){
-      try{
-        await navigator.clipboard.writeText(location.href);
-        alert("Link copied! 💝");
-      }catch(err){
-        alert("Couldn’t auto-copy. Copy from address bar 🙂");
-      }
-    }
-    window.copyLink = copyLink;
-
-    function heartRain(){
-      rain.style.display = "block";
-      rain.innerHTML = "";
-      for(let i=0;i<42;i++){
-        const h = document.createElement("div");
-        h.className = "h";
-        h.style.left = rand(0, 100) + "vw";
-        h.style.animationDelay = rand(0, 0.35) + "s";
-        h.style.transform = `translateY(-8vh) rotate(${rand(0,180)}deg)`;
-        rain.appendChild(h);
-      }
-      setTimeout(()=>{ rain.style.display = "none"; }, 2300);
-    }
-
-    modal.addEventListener("click", (e)=>{
-      if(e.target === modal) closeModal();
-    });
-  </script>
+function heartRain(){
+  rain.style.display="block";
+  rain.innerHTML="";
+  for(let i=0;i<35;i++){
+    const h=document.createElement("div");
+    h.className="h";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDelay=Math.random()*0.3+"s";
+    rain.appendChild(h);
+  }
+  setTimeout(()=>rain.style.display="none",2000);
+}
+</script>
 </body>
 </html>
