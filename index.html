@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Valentine 💖</title>
+
   <style>
     :root{
       --bg1:#ffe1ef;
       --bg2:#e4f4ff;
-      --card: rgba(255,255,255,.80);
-      --stroke: rgba(255,255,255,.60);
+      --card: rgba(255,255,255,.82);
+      --stroke: rgba(255,255,255,.62);
       --text:#1f2033;
       --muted:#6a6f86;
       --pink:#ff2f7b;
@@ -17,10 +18,11 @@
       --shadow: 0 22px 80px rgba(20,20,40,.18);
       --r: 26px;
     }
+
     *{ box-sizing:border-box; }
+    html, body { height: 100%; }
     body{
       margin:0;
-      min-height:100vh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
       overflow:hidden;
@@ -47,19 +49,20 @@
       position:absolute; top:-14px; left: 22px;
       padding: 8px 14px;
       border-radius: 999px;
-      background: rgba(255,255,255,.9);
-      border: 1px solid rgba(255,255,255,.7);
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.75);
       box-shadow: 0 12px 30px rgba(0,0,0,.08);
       font-size: 13px;
-      color: rgba(60,60,90,.75);
+      color: rgba(60,60,90,.78);
     }
 
     h1{
-      margin: 12px 0 8px;
+      margin: 12px 0 10px;
       font-size: clamp(22px, 3.8vw, 36px);
       letter-spacing:-0.02em;
       line-height:1.15;
     }
+
     .name{
       background: linear-gradient(90deg, var(--pink), var(--pink2), #5bbcff);
       -webkit-background-clip:text; background-clip:text;
@@ -67,17 +70,34 @@
       font-weight: 950;
       text-transform: capitalize;
     }
+
     p{ margin:0; color:var(--muted); font-size:14px; }
 
-    .arena{
-      margin-top: 22px;
-      height: 110px;
-      position:relative;
+    /* Screens */
+    .screen { display:none; }
+    .screen.active { display:block; }
+
+    /* Name input screen */
+    .inputRow{
+      margin-top: 18px;
       display:flex;
+      gap:10px;
       justify-content:center;
-      align-items:center;
-      gap:14px;
-      touch-action:none;
+      flex-wrap:wrap;
+    }
+    input[type="text"]{
+      width:min(340px, 82vw);
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(120,120,160,.25);
+      outline: none;
+      font-size: 15px;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 12px 30px rgba(0,0,0,.06);
+    }
+    input[type="text"]:focus{
+      border-color: rgba(255,47,123,.55);
+      box-shadow: 0 18px 48px rgba(255,47,123,.18);
     }
 
     button{
@@ -92,6 +112,30 @@
     }
     button:active{ transform: scale(.98); }
 
+    .primary{
+      color:white;
+      background: linear-gradient(135deg, var(--pink), var(--pink2));
+      box-shadow: 0 16px 48px rgba(255,47,123,.30);
+    }
+    .secondary{
+      background: rgba(255,255,255,.9);
+      color:#2a2c42;
+      border:1px solid rgba(120,120,160,.22);
+      box-shadow: 0 14px 32px rgba(0,0,0,.10);
+      font-weight:850;
+    }
+
+    /* Play screen */
+    .arena{
+      margin-top: 22px;
+      height: 110px;
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      touch-action:none; /* mobile pointer tracking */
+    }
     .yes{
       color:white;
       background: linear-gradient(135deg, var(--pink), var(--pink2));
@@ -107,9 +151,9 @@
       left: 60%;
       top: 34px;
     }
-
     .hint{ margin-top:10px; font-size:12.5px; color: rgba(60,60,90,.68); }
 
+    /* Modal */
     .modal{
       position:fixed; inset:0;
       display:none;
@@ -142,6 +186,7 @@
       font-weight:850;
     }
 
+    /* Falling hearts */
     .rain{ position:fixed; inset:0; pointer-events:none; display:none; z-index:60; }
     .h{
       position:absolute;
@@ -160,15 +205,33 @@
     <div class="card">
       <div class="badge">💝 Happy Valentine’s Week</div>
 
-      <h1><span class="name" id="nameSlot">Someone</span> will you be my Valentine?</h1>
-      <p id="subline">Try tapping “No”… if you can..😅</p>
+      <!-- Screen 1: Ask name -->
+      <div class="screen active" id="screenName">
+        <h1>Enter your name 💗</h1>
+        <p>So I can make this cute page just for you 😄</p>
 
-      <div class="arena" id="arena">
-        <button class="yes" id="yesBtn">Yes 💖</button>
-        <button class="no" id="noBtn">No</button>
+        <div class="inputRow">
+          <input id="nameInput" type="text" placeholder="Type your name (e.g., Aarti)" maxlength="22" />
+          <button class="primary" id="startBtn">Continue ➜</button>
+        </div>
+
+        <div class="hint" style="margin-top:14px;">
+          Tip: You can type nicknames too 😌
+        </div>
       </div>
 
-      <div class="hint" id="hint">Try tapping “No”… if you can..😄</div>
+      <!-- Screen 2: Valentine question -->
+      <div class="screen" id="screenPlay">
+        <h1><span class="name" id="nameSlot">Someone</span> will you be my Valentine?</h1>
+        <p id="subline">Try tapping “No”… if you can..😅</p>
+
+        <div class="arena" id="arena">
+          <button class="yes" id="yesBtn">Yes 💖</button>
+          <button class="no" id="noBtn">No</button>
+        </div>
+
+        <div class="hint" id="hint">Try tapping “No”… if you can..😄</div>
+      </div>
     </div>
   </div>
 
@@ -189,28 +252,51 @@
   <div class="rain" id="rain"></div>
 
   <script>
-    // ---- Personalization via URL param: ?name=Aarti ----
-    function getNameFromURL(){
-      const params = new URLSearchParams(window.location.search);
-      let n = params.get("name") || params.get("n") || "";
-      n = n.trim();
+    // ---- Screen switching + personalization ----
+    const screenName = document.getElementById("screenName");
+    const screenPlay = document.getElementById("screenPlay");
+    const nameInput = document.getElementById("nameInput");
+    const startBtn = document.getElementById("startBtn");
+    const nameSlot = document.getElementById("nameSlot");
+    const subline = document.getElementById("subline");
 
-      // keep it safe/clean
+    function cleanName(n){
+      n = (n || "").trim();
       n = n.replace(/[^a-zA-Z0-9 ._'~-]/g, "");
-      if(!n) n = "Someone";
+      if(!n) return "";
       if(n.length > 22) n = n.slice(0, 22);
       return n;
     }
 
-    const personName = getNameFromURL();
-    document.getElementById("nameSlot").textContent = personName;
-    document.title = personName + " 💖";
+    function showPlay(name){
+      nameSlot.textContent = name;
+      document.title = name + " 💖";
+      subline.textContent = `Hey ${name}… try tapping “No”… if you can 😅`;
+      screenName.classList.remove("active");
+      screenPlay.classList.add("active");
+    }
 
-    // Optional: change the subline slightly based on name
-    document.getElementById("subline").textContent =
-      `Hey ${personName}… try tapping “No”… if you can 😅`;
+    // If they already entered a name before, load it
+    const saved = cleanName(localStorage.getItem("val_name"));
+    if(saved) showPlay(saved);
 
-    // ---- Existing logic ----
+    function start(){
+      const n = cleanName(nameInput.value);
+      if(!n){
+        nameInput.focus();
+        nameInput.placeholder = "Please enter your name 🙂";
+        return;
+      }
+      localStorage.setItem("val_name", n);
+      showPlay(n);
+    }
+
+    startBtn.addEventListener("click", start);
+    nameInput.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") start();
+    });
+
+    // ---- Existing game logic ----
     const arena = document.getElementById('arena');
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
@@ -224,7 +310,7 @@
     function moveNo(){
       const rect = arena.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
-      const pad = 8;
+      const pad = 10;
 
       const maxX = rect.width - b.width - pad;
       const maxY = rect.height - b.height - pad;
@@ -263,9 +349,11 @@
     window.closeModal = closeModal;
 
     async function copyLink(){
+      // Share link that re-opens with name auto-filled via localStorage (same device)
+      // If you want shareable-by-URL name, tell me and I’ll add ?name=
       try{
         await navigator.clipboard.writeText(location.href);
-        alert(`Link copied! Send it to ${personName} 💝`);
+        alert("Link copied! 💝");
       }catch(err){
         alert("Couldn’t auto-copy. Copy from address bar 🙂");
       }
