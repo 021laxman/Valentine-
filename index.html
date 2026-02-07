@@ -56,6 +56,23 @@
       color: rgba(60,60,90,.78);
     }
 
+    /* ✅ Change name button */
+    .changeName{
+      position:absolute;
+      top: 14px;
+      right: 14px;
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+      font-weight: 850;
+      cursor: pointer;
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(120,120,160,.22);
+      color:#2a2c42;
+      box-shadow: 0 12px 28px rgba(0,0,0,.08);
+      display:none; /* shown only on play screen */
+    }
+
     h1{
       margin: 12px 0 10px;
       font-size: clamp(22px, 3.8vw, 36px);
@@ -73,11 +90,9 @@
 
     p{ margin:0; color:var(--muted); font-size:14px; }
 
-    /* Screens */
     .screen { display:none; }
     .screen.active { display:block; }
 
-    /* Name input screen */
     .inputRow{
       margin-top: 18px;
       display:flex;
@@ -117,15 +132,7 @@
       background: linear-gradient(135deg, var(--pink), var(--pink2));
       box-shadow: 0 16px 48px rgba(255,47,123,.30);
     }
-    .secondary{
-      background: rgba(255,255,255,.9);
-      color:#2a2c42;
-      border:1px solid rgba(120,120,160,.22);
-      box-shadow: 0 14px 32px rgba(0,0,0,.10);
-      font-weight:850;
-    }
 
-    /* Play screen */
     .arena{
       margin-top: 22px;
       height: 110px;
@@ -134,7 +141,7 @@
       justify-content:center;
       align-items:center;
       gap:14px;
-      touch-action:none; /* mobile pointer tracking */
+      touch-action:none;
     }
     .yes{
       color:white;
@@ -153,7 +160,6 @@
     }
     .hint{ margin-top:10px; font-size:12.5px; color: rgba(60,60,90,.68); }
 
-    /* Modal */
     .modal{
       position:fixed; inset:0;
       display:none;
@@ -185,8 +191,15 @@
       box-shadow:none;
       font-weight:850;
     }
+    .startOver{
+      margin-left:10px;
+      background: rgba(255,255,255,.9);
+      color:#2a2c42;
+      border:1px solid rgba(120,120,160,.22);
+      box-shadow: 0 12px 28px rgba(0,0,0,.08);
+      font-weight:850;
+    }
 
-    /* Falling hearts */
     .rain{ position:fixed; inset:0; pointer-events:none; display:none; z-index:60; }
     .h{
       position:absolute;
@@ -205,28 +218,27 @@
     <div class="card">
       <div class="badge">💝 Happy Valentine’s Week 🗓️</div>
 
-      <!-- Screen 1: Ask name -->
+      <!-- ✅ visible only on play screen -->
+      <button class="changeName" id="changeNameBtn" type="button">Change Name ✍️</button>
+
+      <!-- Screen 1 -->
       <div class="screen active" id="screenName">
         <h1>Enter your name 💗</h1>
-
         <div class="inputRow">
           <input id="nameInput" type="text" placeholder="Type your name.." maxlength="22" />
-          <button class="primary" id="startBtn">Continue ➜</button>
+          <button class="primary" id="startBtn" type="button">Continue ➜</button>
         </div>
-
-        <div class="hint" style="margin-top:14px;">
-          Tip: You can type nicknames too 😌
-        </div>
+        <div class="hint" style="margin-top:14px;">Tip: You can type nicknames too 😌</div>
       </div>
 
-      <!-- Screen 2: Valentine question -->
+      <!-- Screen 2 -->
       <div class="screen" id="screenPlay">
         <h1><span class="name" id="nameSlot">Someone</span> will you be my Valentine?</h1>
-        <p>Try tapping “No”… if you can..😅</p>
+        <p id="subline">Try tapping “No”… if you can..😅</p>
 
         <div class="arena" id="arena">
-          <button class="yes" id="yesBtn">Yes 💖</button>
-          <button class="no" id="noBtn">No</button>
+          <button class="yes" id="yesBtn" type="button">Yes 💖</button>
+          <button class="no" id="noBtn" type="button">No</button>
         </div>
 
         <div class="hint" id="hint">Try tapping “No”… if you can..😄</div>
@@ -243,6 +255,7 @@
       </p>
       <div style="margin-top:16px;">
         <button class="yes" onclick="copyLink()">Copy Link 🔗</button>
+        <button class="startOver" onclick="resetName()">Start Over ↩️</button>
         <button class="close" onclick="closeModal()">Close</button>
       </div>
     </div>
@@ -251,13 +264,13 @@
   <div class="rain" id="rain"></div>
 
   <script>
-    // ---- Screen switching + personalization ----
     const screenName = document.getElementById("screenName");
     const screenPlay = document.getElementById("screenPlay");
     const nameInput = document.getElementById("nameInput");
     const startBtn = document.getElementById("startBtn");
     const nameSlot = document.getElementById("nameSlot");
-    const subline = document.getElementById("subline");
+    const sublineEl = document.getElementById("subline");
+    const changeNameBtn = document.getElementById("changeNameBtn");
 
     function cleanName(n){
       n = (n || "").trim();
@@ -267,17 +280,24 @@
       return n;
     }
 
+    function showNameScreen(){
+      screenPlay.classList.remove("active");
+      screenName.classList.add("active");
+      changeNameBtn.style.display = "none";
+      nameInput.value = "";
+      nameInput.placeholder = "Type your name..";
+      document.title = "Valentine 💖";
+      setTimeout(()=> nameInput.focus(), 60);
+    }
+
     function showPlay(name){
       nameSlot.textContent = name;
       document.title = name + " 💖";
-      subline.textContent = `Try tapping “No”… if you can 😅`;
+      if (sublineEl) sublineEl.textContent = "Try tapping “No”… if you can..😅";
       screenName.classList.remove("active");
       screenPlay.classList.add("active");
+      changeNameBtn.style.display = "inline-block";
     }
-
-    // If they already entered a name before, load it
-    const saved = cleanName(localStorage.getItem("val_name"));
-    if(saved) showPlay(saved);
 
     function start(){
       const n = cleanName(nameInput.value);
@@ -290,12 +310,25 @@
       showPlay(n);
     }
 
+    function resetName(){
+      localStorage.removeItem("val_name");
+      closeModal();
+      showNameScreen();
+    }
+    window.resetName = resetName;
+
     startBtn.addEventListener("click", start);
     nameInput.addEventListener("keydown", (e)=>{
       if(e.key === "Enter") start();
     });
 
-    // ---- Existing game logic ----
+    changeNameBtn.addEventListener("click", resetName);
+
+    // ✅ Auto-load saved name, BUT still allows change name
+    const saved = cleanName(localStorage.getItem("val_name"));
+    if(saved) showPlay(saved);
+
+    // ---- Game logic ----
     const arena = document.getElementById('arena');
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
@@ -348,8 +381,6 @@
     window.closeModal = closeModal;
 
     async function copyLink(){
-      // Share link that re-opens with name auto-filled via localStorage (same device)
-      // If you want shareable-by-URL name, tell me and I’ll add ?name=
       try{
         await navigator.clipboard.writeText(location.href);
         alert("Link copied! 💝");
